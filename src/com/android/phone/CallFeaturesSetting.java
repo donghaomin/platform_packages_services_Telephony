@@ -187,6 +187,8 @@ public class CallFeaturesSetting extends PreferenceActivity
 
     private static final String BUTTON_CALL_UI_IN_BACKGROUND = "bg_incall_screen";
 
+    private static final String INCALL_GLOWPAD_TRANSPARENCY = "incall_glowpad_transparency";
+
     private static final String VM_NUMBERS_SHARED_PREFERENCES_NAME = "vm_numbers";
 
     private static final String BUTTON_SIP_CALL_OPTIONS =
@@ -275,6 +277,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private CheckBoxPreference mButtonAutoRetry;
     private CheckBoxPreference mButtonHAC;
     private CheckBoxPreference mButtonCallUiInBackground;
+    private CheckBoxPreference mIncallGlowpadTransparency;
     private ListPreference mButtonDTMF;
     private ListPreference mButtonTTY;
     private ListPreference mButtonSipCallOptions;
@@ -567,6 +570,10 @@ public class CallFeaturesSetting extends PreferenceActivity
         } else if (preference == mButtonCallUiInBackground) {
             Settings.System.putInt(mPhone.getContext().getContentResolver(),
                     Settings.System.CALL_UI_IN_BACKGROUND,
+                    (Boolean) objValue ? 1 : 0);
+        } else if (preference == mIncallGlowpadTransparency) {
+            Settings.System.putInt(mPhone.getContext().getContentResolver(),
+                    Settings.System.INCALL_GLOWPAD_TRANSPARENCY,
                     (Boolean) objValue ? 1 : 0);
         } else if (preference == mVoicemailProviders) {
             final String newProviderKey = (String) objValue;
@@ -1549,6 +1556,8 @@ public class CallFeaturesSetting extends PreferenceActivity
         mButtonTTY = (ListPreference) findPreference(BUTTON_TTY_KEY);
         mButtonCallUiInBackground =
                 (CheckBoxPreference) findPreference(BUTTON_CALL_UI_IN_BACKGROUND);
+        mIncallGlowpadTransparency =
+                (CheckBoxPreference) findPreference(INCALL_GLOWPAD_TRANSPARENCY);
         mVoicemailProviders = (ListPreference) findPreference(BUTTON_VOICEMAIL_PROVIDER_KEY);
         mFlipAction = (ListPreference) findPreference(FLIP_ACTION_KEY);
 
@@ -1617,7 +1626,10 @@ public class CallFeaturesSetting extends PreferenceActivity
         }
 
         if (mButtonCallUiInBackground != null) {
-            mButtonCallUiInBackground.setOnPreferenceChangeListener(this);
+            mButtonCallUiInBackground.setOnPreferenceChangeListener(this);}
+
+        if (mIncallGlowpadTransparency != null) {
+            mIncallGlowpadTransparency.setOnPreferenceChangeListener(this);
         }
 
         if (mFlipAction != null) {
@@ -1839,6 +1851,12 @@ public class CallFeaturesSetting extends PreferenceActivity
             int callUiInBackground = Settings.System.getInt(getContentResolver(),
                     Settings.System.CALL_UI_IN_BACKGROUND, 0);
             mButtonCallUiInBackground.setChecked(callUiInBackground != 0);
+        }
+
+        if (mIncallGlowpadTransparency != null) {
+            int incallGlowpadTrans = Settings.System.getInt(getContentResolver(),
+                    Settings.System.INCALL_GLOWPAD_TRANSPARENCY, 0);
+            mIncallGlowpadTransparency.setChecked(incallGlowpadTrans != 0);
         }
 
         if (mFlipAction != null) {
